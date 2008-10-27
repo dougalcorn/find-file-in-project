@@ -1,0 +1,41 @@
+This is my version of find-file-in-project for emacs.  I originally
+started with the ffip from the rinari project many, many moons ago.  I
+noticed that none of the publicly available versions of ffip had some
+of my modifications, so I decided to setup this repository.
+
+From the beginning find-file-in-project was intended to mimic
+TextMate's cmd-T functionality.  While editing a file in a project you
+invoke find-file-in-project and it should prompt you with the files to
+edit in that project.  What files get selected depend on the project.
+Right now, ffip can detect the project root given the evidence of a
+config/environment.rb file.  Obviously, this really only works with
+Rails projects.
+
+To combat this, I added the ability to explicitly set the project root
+with set-project-root and then clear-project-root.  Once you
+set-project-root, ffip will use that to populate the files regardless
+of what files you happen to be editing.
+
+ffip will scan the project tree each time it's invoked.  I couldn't
+think of a better way to detect when files were added to the project.
+In some cases this can be quite slow.  So, I added a variable called
+find-file-in-project-cache-results that will not scan the project
+again until you explicitly call find-file-in-project-rebuild-cache.
+
+ffip can also exclude directories and files from the scan using the
+find-file-in-projects-excludes and find-file-in-project-file-excludes.
+See the documentation on those variables for more info.
+
+I think what makes my version of ffip unique is that I do some
+massaging of the results before giving it to ido-completing-read.
+First, when there are multiple files in the project with the same name
+(like 'new.html.erb') the entries are appended with the directory name
+they are found in.  This makes it much easier to select the file you
+want.  Second, I sort the choices based on the buffer-list so that the
+files most recently visited come first in the list.  Much like
+TextMate's cmd-T this means you can often just select the default when
+you're wanting to switch to the file you were just in.
+
+To be honest, I'm not using this much any more.  These days I rely
+pretty heavily on ETags.  You can see some of my discussion on that at
+http://blog.lathi.net/articles/2007/11/07/navigating-your-projects-in-emacs
